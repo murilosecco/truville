@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truville Café — Embalagem Tradicional 500g</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #120C06;
+    --surface: #1E1409;
+    --gold: #C8963E;
+    --gold-light: #E8B96A;
+    --cream: #F5EDD8;
+    --muted: #7A6A55;
+    --text: #EDE3D0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ── LAYOUT ── */
+  .stage {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    grid-template-rows: 1fr;
+    height: 100vh;
+  }
+
+  /* ── IMAGEM ── */
+  .image-panel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 60%, #2A1E0E 0%, #120C06 70%);
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .slide img {
+    max-height: 82vh;
+    max-width: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 60px rgba(0,0,0,0.8));
+    transition: transform 0.5s ease;
+  }
+
+  .slide.active img {
+    transform: scale(1);
+  }
+
+  /* número grande decorativo */
+  .version-number {
+    position: absolute;
+    bottom: 32px;
+    left: 40px;
+    font-size: 120px;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    color: rgba(200, 150, 62, 0.08);
+    line-height: 1;
+    pointer-events: none;
+    letter-spacing: -4px;
+  }
+
+  /* ── PAINEL LATERAL ── */
+  .info-panel {
+    background: var(--surface);
+    border-left: 1px solid rgba(200,150,62,0.15);
+    display: flex;
+    flex-direction: column;
+    padding: 48px 36px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .info-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+  }
+
+  .brand-header {
+    margin-bottom: 36px;
+  }
+
+  .brand-label {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .brand-name {
+    font-size: 22px;
+    color: var(--cream);
+    font-weight: normal;
+    letter-spacing: 0.5px;
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: system-ui, sans-serif;
+  }
+
+  /* card da versão */
+  .version-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .version-tag {
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .version-title {
+    font-size: 28px;
+    color: var(--gold-light);
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  .version-desc {
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--text);
+    opacity: 0.85;
+  }
+
+  .version-attrs {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .attr {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .attr-label {
+    font-family: system-ui, sans-serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  .attr-value {
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── NAVEGAÇÃO ── */
+  .nav-area {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .nav-btn:hover {
+    background: rgba(200,150,62,0.1);
+    border-color: var(--gold);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 2px;
+    background: rgba(200,150,62,0.15);
+    border-radius: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--gold);
+    border-radius: 1px;
+    transition: width 0.4s ease;
+  }
+
+  .nav-counter {
+    font-family: system-ui, sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* dots */
+  .dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    justify-content: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(200,150,62,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    padding: 0;
+  }
+
+  .dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+  }
+
+  /* keyboard hint */
+  .key-hint {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: system-ui, sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(200,150,62,0.3);
+  }
+
+  /* info panel slide transition */
+  .version-info-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .version-info {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+
+  .version-info.active {
+    position: relative;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- ── IMAGEM ── -->
+  <div class="image-panel" id="imagePanel">
+    <!-- slides injetados via JS -->
+    <div class="version-number" id="versionBg">01</div>
+  </div>
+
+  <!-- ── PAINEL LATERAL ── -->
+  <div class="info-panel">
+
+    <div class="brand-header">
+      <div class="brand-label">Projeto de Embalagem</div>
+      <div class="brand-name">truVille Café</div>
+      <div class="brand-sub">Tradicional 500g — Exploração de variações</div>
+    </div>
+
+    <div class="version-info-wrap" id="infoWrap">
+      <!-- info cards injetados via JS -->
+    </div>
+
+    <div class="nav-area">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">←</button>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span class="nav-counter" id="counter">1 / 16</span>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">→</button>
+    </div>
+
+    <div class="dots" id="dots"></div>
+
+  </div>
+</div>
+
+<div class="key-hint">← → para navegar · ESC para início</div>
+
+<script>
+const slides = [
+  {
+    img: "01_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Gradiente Intenso",
+    desc: "A versão de maior impacto visual da série. O degradê de branco para marrom-escuro saturado cria profundidade e calor, enquanto a xícara detalhada — com biscoito e colher dourada — conta uma história de ritual e aconchego. Posicionamento: premium popular.",
+    fundo: "Branco → Marrom profundo",
+    cupula: "Xícara clássica com biscoito e colher",
+    personalidade: "Caloroso, indulgente, convidativo",
+  },
+  {
+    img: "02_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Laranja Vibrante",
+    desc: "A cor sobe de intensidade, o fundo laranja-âmbar vibra com energia. Mantém os elementos da versão anterior mas com cromatismo mais assertivo. Excelente para gôndola — corta o ruído visual da concorrência. Posicionamento: ativo, presente, irresistível.",
+    fundo: "Branco → Laranja âmbar intenso",
+    cupula: "Xícara clássica com biscoito e colher",
+    personalidade: "Energético, apetitoso, popular",
+  },
+  {
+    img: "03_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Monocromia Sofisticada",
+    desc: "A versão mais elegante da série. Fundo quase todo branco reduz o ruído e eleva a percepção de valor. A xícara com acabamento dourado sutil fala para um público que associa menos cor a mais qualidade. Posicionamento: premium silencioso.",
+    fundo: "Branco total com toque dourado",
+    cupula: "Xícara premium, acabamento ouro",
+    personalidade: "Refinado, discreto, confiável",
+  },
+  {
+    img: "04_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Bege Quente",
+    desc: "Transição de branco para bege-pêssego suave. Equilíbrio entre a frieza do branco puro e a intensidade do laranja. Versão universalmente legível — funciona para diferentes faixas etárias e pontos de venda. Posicionamento: acessível, familiar, cotidiano.",
+    fundo: "Branco → Bege pêssego",
+    cupula: "Xícara clássica com biscoito e colher",
+    personalidade: "Acessível, familiar, equilibrado",
+  },
+  {
+    img: "05_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Cena Simplificada",
+    desc: "A composição ganha leveza com a remoção do biscoito e da colher. A xícara centralizada com dois grãos de café comunica diretamente o produto. Menos é mais: a narrativa visual fica mais limpa e legível em prateleiras com pouco espaço. Posicionamento: direto ao ponto.",
+    fundo: "Branco → Laranja suave",
+    cupula: "Xícara clean com grãos de café",
+    personalidade: "Claro, funcional, honesto",
+  },
+  {
+    img: "06_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Gradiente Vibrante Simplificado",
+    desc: "Laranja intenso com a composição clean — xícara simples, grãos de café. A combinação do cromatismo forte com elementos mínimos cria um equilíbrio interessante entre agressividade visual e clareza de mensagem. Para mercados populares e supermercados de alto fluxo.",
+    fundo: "Branco → Laranja forte",
+    cupula: "Xícara sem adereços",
+    personalidade: "Impactante, direto, popular",
+  },
+  {
+    img: "07_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Composição Aberta",
+    desc: "A xícara ocupa mais espaço, ganha protagonismo. O fundo claro valoriza a louça branca. 'Tradicional' em destaque ouro-marrom comunica herança e autenticidade. A identidade visual truVille aparece fortalecida. Para canais que vendem pela experiência do produto.",
+    fundo: "Branco → Laranja médio",
+    cupula: "Xícara ampla, posição central",
+    personalidade: "Autêntico, experiencial, caloroso",
+  },
+  {
+    img: "08_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Xícara em Evidência",
+    desc: "A imagem da xícara cresce ainda mais, quase sem moldura inferior. O produto visual domina o layout. 'Torra Média' ao lado esquerdo reequilibra a composição. Versão de maior apetite visual — a fumacinha do café é o ponto focal imediato.",
+    fundo: "Branco → Laranja suave baixo",
+    cupula: "Xícara dominante, vapor em destaque",
+    personalidade: "Apetitoso, intenso, sensorial",
+  },
+  {
+    img: "09_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Louça Clássica",
+    desc: "A xícara com pires em louça com relevo traz um toque de tradição artesanal. O grão de café no pires ancora a comunicação do produto. Versão que dialoga com consumidores que valorizam a cultura do café — sofisticação sem elitismo.",
+    fundo: "Branco → Laranja médio",
+    cupula: "Louça com relevo, grão de café",
+    personalidade: "Artesanal, tradicional, cultural",
+  },
+  {
+    img: "10_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Equilíbrio Central",
+    desc: "Composição equilibrada com a xícara de louça em posição levemente mais baixa, criando espaço para os elementos de texto respira. A hierarquia visual está mais clara: marca → variante → produto. Excelente para e-commerce onde a leitura rápida é essencial.",
+    fundo: "Branco → Laranja moderado",
+    cupula: "Xícara centrada, hierarquia clara",
+    personalidade: "Legível, equilibrado, digital-friendly",
+  },
+  {
+    img: "11_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Clássica Madura",
+    desc: "A versão mais refinada da série com xícara de louça. A paleta bege-pêssego suavizada e a composição mais ampla transmitem maturidade de marca. O texto '500g / Café torrado em grão' ganha espaço e respiro. Para distribuição em lojas gourmet e empórios.",
+    fundo: "Branco total com borda laranja",
+    cupula: "Louça elegante, espaçamento generoso",
+    personalidade: "Maduro, gourmet, sofisticado",
+  },
+  {
+    img: "12_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Versão Compacta",
+    desc: "Composição levemente menor da xícara abre espaço para os elementos gráficos coexistirem sem competição. A assinatura 'Torra Média' à esquerda cria um eixo de equilíbrio. A embalagem funciona muito bem em conjunto de linha — ao lado de outros sabores.",
+    fundo: "Branco → Laranja pêssego",
+    cupula: "Proporção equilibrada, espaço respirante",
+    personalidade: "Modular, escalável, consistente",
+  },
+  {
+    img: "13_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Tradicional em Destaque",
+    desc: "O script dourado 'Tradicional' recebe mais peso visual nesta versão. A tipografia do nome de variante passa de elemento secundário para âncora da identidade. Reforça que a Torra Média não é apenas um dado técnico — é uma promessa de sabor.",
+    fundo: "Branco → Bege laranja",
+    cupula: "Xícara com grãos de café",
+    personalidade: "Patrimonial, propositivo, gastronômico",
+  },
+  {
+    img: "14_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Elegância Contida",
+    desc: "O script com contorno duplo (ouro + marrom) eleva a percepção de valor da tipografia 'Tradicional'. A paleta bege quente e a xícara de louça criam coerência visual total. Versão com maior unidade estética da série — tudo na mesma temperatura de cor.",
+    fundo: "Branco → Bege âmbar",
+    cupula: "Louça com acabamento dourado",
+    personalidade: "Coeso, elegante, premium acessível",
+  },
+  {
+    img: "15_Mockup_500g_Cafe__Tradicional_Truville.jpg",
+    title: "Proporção Final",
+    desc: "A xícara amplia sua presença, a louça branca com aro dourado domina o campo visual inferior. A fumacinha é quase etérea. Versão de maior poesia visual — transmite a experiência sensorial do café antes de qualquer texto ser lido. Forte para campanhas de brand.",
+    fundo: "Branco → Laranja suave",
+    cupula: "Xícara larga, vapor poético",
+    personalidade: "Sensorial, onírico, memorável",
+  },
+  {
+    img: "Mockup_500g_Cafe__Tradicional_Truville.png",
+    title: "Versão de Referência",
+    desc: "A versão mestre da série — xícara clássica com biscoito, colher dourada e gradiente marrom intenso. Todos os elementos da marca em máxima expressão: logo truVille, marca dagua sutil ao fundo, indicação de Torra Média, peso e descrição do produto. O ponto de partida para toda a exploração.",
+    fundo: "Branco → Marrom caramelo intenso",
+    cupula: "Composição completa: biscoito, colher ouro",
+    personalidade: "Completo, referência, canônico",
+  },
+];
+
+let current = 0;
+const total = slides.length;
+
+function init() {
+  const panel = document.getElementById('imagePanel');
+  const infoWrap = document.getElementById('infoWrap');
+  const dotsEl = document.getElementById('dots');
+
+  slides.forEach((s, i) => {
+    // slide
+    const div = document.createElement('div');
+    div.className = 'slide' + (i === 0 ? ' active' : '');
+    div.id = 'slide-' + i;
+    const img = document.createElement('img');
+    img.src = s.img;
+    img.alt = s.title;
+    div.appendChild(img);
+    panel.insertBefore(div, document.getElementById('versionBg'));
+
+    // info card
+    const card = document.createElement('div');
+    card.className = 'version-info' + (i === 0 ? ' active' : '');
+    card.id = 'info-' + i;
+    card.innerHTML = `
+      <div class="version-tag">Variação ${String(i + 1).padStart(2, '0')} de ${total}</div>
+      <div class="version-title">${s.title}</div>
+      <div class="version-desc">${s.desc}</div>
+      <div class="version-attrs">
+        <div class="attr"><span class="attr-label">Fundo</span><span class="attr-value">${s.fundo}</span></div>
+        <div class="attr"><span class="attr-label">Cena</span><span class="attr-value">${s.cupula}</span></div>
+        <div class="attr"><span class="attr-label">Persona</span><span class="attr-value">${s.personalidade}</span></div>
+      </div>`;
+    infoWrap.appendChild(card);
+
+    // dot
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Ir para variação ' + (i + 1));
+    dot.onclick = () => goTo(i);
+    dotsEl.appendChild(dot);
+  });
+
+  updateUI();
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= total) return;
+  goTo(next);
+}
+
+function goTo(idx) {
+  document.getElementById('slide-' + current).classList.remove('active');
+  document.getElementById('info-' + current).classList.remove('active');
+  document.querySelectorAll('.dot')[current].classList.remove('active');
+
+  current = idx;
+
+  document.getElementById('slide-' + current).classList.add('active');
+  document.getElementById('info-' + current).classList.add('active');
+  document.querySelectorAll('.dot')[current].classList.add('active');
+
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('versionBg').textContent = String(current + 1).padStart(2, '0');
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
+  if (e.key === 'Escape') goTo(0);
+});
+
+init();
+</script>
+</body>
+</html>
