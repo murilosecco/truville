@@ -509,6 +509,69 @@ body {
   text-transform: uppercase; color: rgba(200,150,62,0.4);
   pointer-events: none;
 }
+
+/* ══ LINE SWITCHER ══ */
+.line-switcher {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border: 1px solid rgba(200,150,62,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.line-btn {
+  flex: 1;
+  padding: 8px 6px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: system-ui, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1.3;
+  text-align: center;
+}
+.line-btn.active {
+  background: rgba(200,150,62,0.12);
+  color: var(--gold-light);
+}
+.line-btn:not(.active):hover { color: var(--gold); background: rgba(200,150,62,0.05); }
+.line-btn + .line-btn { border-left: 1px solid rgba(200,150,62,0.2); }
+
+/* cover button for line selection */
+.cover-lines {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 0;
+}
+.cover-line-btn {
+  padding: 13px 36px;
+  background: transparent;
+  border: 1px solid rgba(200,150,62,0.35);
+  color: var(--gold-light);
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.cover-line-btn small {
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--muted); text-transform: uppercase;
+}
+.cover-line-btn:hover { background: rgba(200,150,62,0.1); letter-spacing: 3.5px; border-color: var(--gold); }
+@media (max-width: 500px) {
+  .cover-lines { flex-direction: column; gap: 10px; width: 80vw; }
+  .cover-line-btn { padding: 12px 24px; }
+}
+
 </style>
 </head>
 <body>
@@ -557,8 +620,15 @@ body {
   </g>
 </svg>
   </div>
-  <div class="cover-tagline">Embalagem Tradicional 500g &nbsp;·&nbsp; Exploração de variações</div>
-  <button class="cover-btn" onclick="enterPresentation()">Ver embalagens</button>
+  <div class="cover-tagline">Exploração de embalagens &nbsp;·&nbsp; 500g</div>
+  <div class="cover-lines">
+    <button class="cover-line-btn" onclick="enterPresentation('tradicional')">
+      Tradicional<small>16 variações</small>
+    </button>
+    <button class="cover-line-btn" onclick="enterPresentation('extraforte')">
+      Extra Forte<small>11 variações</small>
+    </button>
+  </div>
 </div>
 
 <!-- ══ APRESENTAÇÃO ══ -->
@@ -568,7 +638,11 @@ body {
   </div>
 
   <div class="info-panel">
-    <div class="panel-sub">Tradicional 500g &nbsp;·&nbsp; Variação <span id="varNum">01</span> de 16</div>
+    <div class="line-switcher">
+      <button class="line-btn active" id="btn-tradicional" onclick="switchLine('tradicional')">Tradicional<br>500g</button>
+      <button class="line-btn" id="btn-extraforte" onclick="switchLine('extraforte')">Extra Forte<br>500g</button>
+    </div>
+    <div class="panel-sub"><span id="lineName">Tradicional 500g</span> &nbsp;·&nbsp; Variação <span id="varNum">01</span> de <span id="varTotal">16</span></div>
 
     <div class="version-info-wrap" id="infoWrap"></div>
 
@@ -646,38 +720,85 @@ body {
 <div class="key-hint">&#8592; &#8594; navegar &nbsp;·&nbsp; 1–5 avaliar &nbsp;·&nbsp; ESC fechar</div>
 
 <script>
-const slides = [
-  { img: "01_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Gradiente Intenso", desc: "O degradê de branco para marrom-escuro cria profundidade e calor. A xícara com biscoito e colher dourada conta uma história de ritual e aconchego.", fundo: "Branco → Marrom profundo", cena: "Xícara com biscoito e colher ouro", persona: "Caloroso, indulgente, premium" },
-  { img: "02_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Laranja Vibrante", desc: "Fundo laranja-âmbar intenso com cromatismo assertivo. Excelente para gôndola — corta o ruído visual da concorrência.", fundo: "Branco → Laranja âmbar intenso", cena: "Xícara com biscoito e colher ouro", persona: "Energético, apetitoso, popular" },
-  { img: "03_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Monocromia Sofisticada", desc: "Fundo quase branco reduz o ruído e eleva a percepção de valor. Para um público que associa menos cor a mais qualidade.", fundo: "Branco total com toque dourado", cena: "Xícara premium, acabamento ouro", persona: "Refinado, discreto, confiável" },
-  { img: "04_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Bege Quente", desc: "Transição suave de branco para bege-pêssego. Equilíbrio entre frieza e intensidade — versão universalmente legível.", fundo: "Branco → Bege pêssego", cena: "Xícara com biscoito e colher", persona: "Acessível, familiar, equilibrado" },
-  { img: "05_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Cena Simplificada", desc: "A composição ganha leveza com a remoção do biscoito e da colher. Mais limpa e legível em prateleiras com pouco espaço.", fundo: "Branco → Laranja suave", cena: "Xícara clean com grãos de café", persona: "Claro, funcional, honesto" },
-  { img: "06_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Vibração + Leveza", desc: "Laranja intenso com composição mínima. Combina agressividade visual com clareza de mensagem. Para mercados populares.", fundo: "Branco → Laranja forte", cena: "Xícara sem adereços", persona: "Impactante, direto, popular" },
-  { img: "07_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Composição Aberta", desc: "A xícara ganha protagonismo e Tradicional em ouro comunica herança. A identidade truVille aparece fortalecida.", fundo: "Branco → Laranja médio", cena: "Xícara ampla, posição central", persona: "Autêntico, experiencial, caloroso" },
-  { img: "08_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Xícara em Evidência", desc: "A imagem domina o layout. Torra Média ao lado esquerdo reequilibra a composição. A fumacinha é o ponto focal.", fundo: "Branco → Laranja suave baixo", cena: "Xícara dominante, vapor destacado", persona: "Apetitoso, intenso, sensorial" },
-  { img: "09_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Louça Clássica", desc: "A louça com relevo traz um toque artesanal. Dialoga com consumidores que valorizam a cultura do café.", fundo: "Branco → Laranja médio", cena: "Louça com relevo, grão de café", persona: "Artesanal, tradicional, cultural" },
-  { img: "10_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Equilíbrio Central", desc: "Hierarquia visual clara: marca, variante, produto. Excelente para e-commerce onde a leitura rápida é essencial.", fundo: "Branco → Laranja moderado", cena: "Xícara centrada, espaço respirante", persona: "Legível, equilibrado, digital" },
-  { img: "11_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Clássica Madura", desc: "Paleta bege suavizada e composição ampla transmitem maturidade de marca. Para lojas gourmet e empórios.", fundo: "Branco com borda laranja", cena: "Louça elegante, espaço generoso", persona: "Maduro, gourmet, sofisticado" },
-  { img: "12_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Versão Compacta", desc: "Proporção menor da xícara cria equilíbrio modular. Funciona bem em conjunto de linha ao lado de outros sabores.", fundo: "Branco → Laranja pêssego", cena: "Proporção equilibrada", persona: "Modular, escalável, consistente" },
-  { img: "13_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Tradicional em Destaque", desc: "O script dourado Tradicional recebe mais peso visual. A variante passa de elemento secundário a âncora da identidade.", fundo: "Branco → Bege laranja", cena: "Xícara com grãos de café", persona: "Patrimonial, gastronômico" },
-  { img: "14_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Elegância Contida", desc: "O script com contorno duplo eleva a percepção de valor. Paleta bege quente e louça criam coerência visual total.", fundo: "Branco → Bege âmbar", cena: "Louça com acabamento dourado", persona: "Coeso, elegante, premium acessível" },
-  { img: "15_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Proporção Final", desc: "A louça domina, a fumacinha é etérea. Maior poesia visual da série — transmite a experiência antes de qualquer texto.", fundo: "Branco → Laranja suave", cena: "Xícara larga, vapor poético", persona: "Sensorial, onírico, memorável" },
-  { img: "Mockup_500g_Cafe__Tradicional_Truville.png", title: "Versão de Referência", desc: "A versão mestre — todos os elementos em máxima expressão. O ponto de partida para toda a exploração da série.", fundo: "Branco → Marrom caramelo intenso", cena: "Composição completa canônica", persona: "Completo, referência, canônico" },
-];
+const allSlides = {
+  tradicional: [
+    { img: "01_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Gradiente Intenso", desc: "O degradê de branco para marrom-escuro cria profundidade e calor. A xícara com biscoito e colher dourada conta uma história de ritual e aconchego.", fundo: "Branco → Marrom profundo", cena: "Xícara com biscoito e colher ouro", persona: "Caloroso, indulgente, premium" },
+    { img: "02_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Laranja Vibrante", desc: "Fundo laranja-âmbar intenso com cromatismo assertivo. Excelente para gôndola.", fundo: "Branco → Laranja âmbar intenso", cena: "Xícara com biscoito e colher ouro", persona: "Energético, apetitoso, popular" },
+    { img: "03_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Monocromia Sofisticada", desc: "Fundo quase branco reduz o ruído e eleva a percepção de valor. Para um público que associa menos cor a mais qualidade.", fundo: "Branco total com toque dourado", cena: "Xícara premium, acabamento ouro", persona: "Refinado, discreto, confiável" },
+    { img: "04_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Bege Quente", desc: "Transição suave de branco para bege-pêssego. Versão universalmente legível.", fundo: "Branco → Bege pêssego", cena: "Xícara com biscoito e colher", persona: "Acessível, familiar, equilibrado" },
+    { img: "05_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Cena Simplificada", desc: "A composição ganha leveza com a remoção do biscoito e da colher. Mais limpa em prateleiras com pouco espaço.", fundo: "Branco → Laranja suave", cena: "Xícara clean com grãos de café", persona: "Claro, funcional, honesto" },
+    { img: "06_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Vibração + Leveza", desc: "Laranja intenso com composição mínima. Combina agressividade visual com clareza de mensagem.", fundo: "Branco → Laranja forte", cena: "Xícara sem adereços", persona: "Impactante, direto, popular" },
+    { img: "07_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Composição Aberta", desc: "A xícara ganha protagonismo e Tradicional em ouro comunica herança. A identidade truVille aparece fortalecida.", fundo: "Branco → Laranja médio", cena: "Xícara ampla, posição central", persona: "Autêntico, experiencial, caloroso" },
+    { img: "08_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Xícara em Evidência", desc: "A imagem domina o layout. A fumacinha é o ponto focal imediato.", fundo: "Branco → Laranja suave baixo", cena: "Xícara dominante, vapor destacado", persona: "Apetitoso, intenso, sensorial" },
+    { img: "09_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Louça Clássica", desc: "A louça com relevo traz um toque artesanal. Dialoga com consumidores que valorizam a cultura do café.", fundo: "Branco → Laranja médio", cena: "Louça com relevo, grão de café", persona: "Artesanal, tradicional, cultural" },
+    { img: "10_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Equilíbrio Central", desc: "Hierarquia visual clara: marca, variante, produto. Excelente para e-commerce.", fundo: "Branco → Laranja moderado", cena: "Xícara centrada, espaço respirante", persona: "Legível, equilibrado, digital" },
+    { img: "11_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Clássica Madura", desc: "Paleta bege suavizada e composição ampla transmitem maturidade de marca. Para lojas gourmet e empórios.", fundo: "Branco com borda laranja", cena: "Louça elegante, espaço generoso", persona: "Maduro, gourmet, sofisticado" },
+    { img: "12_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Versão Compacta", desc: "Proporção menor da xícara cria equilíbrio modular. Funciona bem em conjunto de linha.", fundo: "Branco → Laranja pêssego", cena: "Proporção equilibrada", persona: "Modular, escalável, consistente" },
+    { img: "13_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Tradicional em Destaque", desc: "O script dourado Tradicional recebe mais peso visual. A variante passa de secundário a âncora da identidade.", fundo: "Branco → Bege laranja", cena: "Xícara com grãos de café", persona: "Patrimonial, gastronômico" },
+    { img: "14_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Elegância Contida", desc: "O script com contorno duplo eleva a percepção de valor. Paleta bege quente e louça criam coerência total.", fundo: "Branco → Bege âmbar", cena: "Louça com acabamento dourado", persona: "Coeso, elegante, premium acessível" },
+    { img: "15_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Proporção Final", desc: "A louça domina, a fumacinha é etérea. Maior poesia visual da série.", fundo: "Branco → Laranja suave", cena: "Xícara larga, vapor poético", persona: "Sensorial, onírico, memorável" },
+    { img: "Mockup_500g_Cafe__Tradicional_Truville.png", title: "Versão de Referência", desc: "A versão mestre — todos os elementos em máxima expressão. O ponto de partida para toda a exploração.", fundo: "Branco → Marrom caramelo intenso", cena: "Composição completa canônica", persona: "Completo, referência, canônico" },
+  ],
+  extraforte: [
+    { img: "01_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Ouro e Poeira", desc: "Fundo preto profundo com explosão de partículas douradas ao redor da xícara preta. Contraste máximo entre dark e dourado. Posicionamento: força e sofisticação.", fundo: "Preto com partículas ouro", cena: "Xícara preta clássica com glitter ouro", persona: "Intenso, sofisticado, premium" },
+    { img: "02_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Preto Limpo", desc: "A embalagem preta sem efeitos de partículas. A força está na redução — sem adorno, a seriedade do produto toma o palco.", fundo: "Preto puro com reflexo diagonal", cena: "Xícara preta, sem partículas", persona: "Sério, direto, confiante" },
+    { img: "03_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Borda Âmbar", desc: "Fundo preto com gradiente marrom-âmbar nas laterais. A luz quente cria profundidade e aquece o visual sem perder a seriedade.", fundo: "Preto com halo marrom-âmbar", cena: "Xícara preta centralizada", persona: "Intenso, caloroso, equilibrado" },
+    { img: "04_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Explosão Lateral", desc: "As partículas douradas explodem do canto inferior direito, criando direcionamento visual e dinamismo. Perfeita para PDV.", fundo: "Preto com explosão ouro diagonal", cena: "Xícara preta com foco lateral", persona: "Dinâmico, energético, impactante" },
+    { img: "05_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Copo de Vidro + Ouro", desc: "O copo duplo de vidro transparente permite ver o café por dentro. Contraste do vidro com o fundo preto e o glitter é elegante e contemporâneo.", fundo: "Preto com partículas ouro", cena: "Copo duplo de vidro transparente", persona: "Moderno, premium, transparente" },
+    { img: "06_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Vidro + Rastro Diagonal", desc: "Copo de vidro com rastro dourado diagonal cruzando a embalagem. Tensão visual entre movimento e estabilidade — elegância com atitude.", fundo: "Preto com rastro dourado diagonal", cena: "Copo de vidro com trilha ouro", persona: "Sofisticado, vanguardista, visual" },
+    { img: "07_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Explosão Centralizada", desc: "Partículas douradas espalham-se radialmente a partir da xícara preta. Composição simétrica e poderosa — mais impactante quando a intensidade é concentrada.", fundo: "Preto com explosão ouro central", cena: "Xícara preta no epicentro do ouro", persona: "Explosivo, centrado, memorável" },
+    { img: "08_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Louça Branca + Dark", desc: "Contraste inédito: xícara branca com símbolo truVille em ouro sobre embalagem preta. O branco no escuro cria tensão e sofisticação simultâneas.", fundo: "Preto com explosão ouro", cena: "Xícara branca com símbolo ouro", persona: "Contrastante, refinado, diferenciado" },
+    { img: "09_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Branco + Gradiente Marrom", desc: "Xícara branca sobre fundo preto que transita para marrom profundo. O gradiente quente humaniza a embalagem escura.", fundo: "Preto → Marrom profundo", cena: "Xícara branca, grãos de café", persona: "Acolhedor, intenso, artesanal" },
+    { img: "10_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Brilho Dourado Lateral", desc: "Partículas douradas em faixa lateral guiam o olhar da variante para a xícara branca. Muito legível em gôndola.", fundo: "Preto com faixa brilho lateral", cena: "Xícara branca com grãos", persona: "Preciso, chamativo, gôndola-ready" },
+    { img: "11_Mockup_500g_Cafe__ExtraForte_Truville.jpg", title: "Vidro + Explosão Central", desc: "O copo de vidro com explosão de partículas douradas ao redor. A versão mais dramática e contemporânea da linha. Para e-commerce e canais premium.", fundo: "Preto com ouro concentrado", cena: "Copo vidro no centro do glitter", persona: "Dramático, contemporâneo, e-commerce" },
+  ]
+};
 
-const total = slides.length;
+let currentLine = "tradicional";
+let slides = allSlides.tradicional;
+let total = slides.length;
 let current = 0;
-const ratings = new Array(total).fill(0);
+const allRatings = { tradicional: new Array(16).fill(0), extraforte: new Array(11).fill(0) };
+let ratings = allRatings.tradicional;
 
-function enterPresentation() {
+function enterPresentation(line) {
+  currentLine = line || "tradicional";
+  slides = allSlides[currentLine];
+  total = slides.length;
+  ratings = allRatings[currentLine];
   document.getElementById("cover").classList.add("hidden");
   document.getElementById("stage").classList.add("visible");
+  rebuildSlides();
+  updateLineSwitcher();
 }
 
-function init() {
+function switchLine(line) {
+  if (line === currentLine) return;
+  currentLine = line;
+  slides = allSlides[currentLine];
+  total = slides.length;
+  ratings = allRatings[currentLine];
+  current = 0;
+  rebuildSlides();
+  updateLineSwitcher();
+}
+
+function updateLineSwitcher() {
+  document.getElementById("btn-tradicional").classList.toggle("active", currentLine === "tradicional");
+  document.getElementById("btn-extraforte").classList.toggle("active", currentLine === "extraforte");
+  const names = { tradicional: "Tradicional 500g", extraforte: "Extra Forte 500g" };
+  document.getElementById("lineName").textContent = names[currentLine];
+}
+
+function rebuildSlides() {
   const panel = document.getElementById("imagePanel");
   const infoWrap = document.getElementById("infoWrap");
   const dotsEl = document.getElementById("dots");
+
+  // Clear existing slides (keep versionBg)
+  panel.querySelectorAll(".slide").forEach(el => el.remove());
+  infoWrap.innerHTML = "";
+  dotsEl.innerHTML = "";
 
   slides.forEach((s, i) => {
     const div = document.createElement("div");
@@ -710,6 +831,12 @@ function init() {
     dotsEl.appendChild(dot);
   });
 
+  updateUI();
+  updateStars();
+}
+
+function init() {
+  // star listeners
   document.querySelectorAll(".star").forEach(star => {
     star.addEventListener("click", () => {
       ratings[current] = parseInt(star.getAttribute("data-v"));
@@ -722,8 +849,6 @@ function init() {
     });
     star.addEventListener("mouseleave", updateStars);
   });
-
-  updateUI();
 }
 
 function updateStars() {
@@ -753,6 +878,7 @@ function goTo(idx) {
 function updateUI() {
   document.getElementById("versionBg").textContent = String(current+1).padStart(2,"0");
   document.getElementById("varNum").textContent = String(current+1).padStart(2,"0");
+  document.getElementById("varTotal").textContent = total;
   document.getElementById("counter").textContent = (current+1) + " / " + total;
   document.getElementById("progressFill").style.width = ((current+1)/total*100) + "%";
   document.getElementById("prevBtn").disabled = current === 0;
@@ -762,40 +888,54 @@ function updateUI() {
 function openResults() {
   const grid = document.getElementById("resultsGrid");
   grid.innerHTML = "";
-  const sorted = slides.map((s,i) => ({...s, idx: i, rating: ratings[i]}))
-    .sort((a,b) => b.rating - a.rating);
-  sorted.forEach((s, rank) => {
-    const card = document.createElement("div");
-    card.className = "result-card" + (rank === 0 && s.rating > 0 ? " top-pick" : "");
-    let starsHtml = "";
-    for(let i=1; i<=5; i++)
-      starsHtml += `<span class="${i <= s.rating ? "" : "empty"}">★</span>`;
-    card.innerHTML = `
-      ${rank === 0 && s.rating > 0 ? "<div class=\"top-badge\">⭐ Favorita</div>" : ""}
-      <img src="${s.img}" alt="${s.title}">
-      <div class="result-card-title">${String(s.idx+1).padStart(2,"0")} — ${s.title}</div>
-      ${s.rating > 0 ? `<div class="result-stars">${starsHtml}</div>` : "<div class=\"result-no-rating\">Sem avaliação</div>"}`;
-    grid.appendChild(card);
+
+  // Show results for both lines
+  ["tradicional","extraforte"].forEach(line => {
+    const lineSlides = allSlides[line];
+    const lineRatings = allRatings[line];
+    const lineNames = { tradicional: "Tradicional 500g", extraforte: "Extra Forte 500g" };
+
+    const header = document.createElement("div");
+    header.style.cssText = "grid-column:1/-1;font-family:system-ui,sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding:8px 0 4px;border-bottom:1px solid rgba(200,150,62,0.15);margin-bottom:4px;";
+    header.textContent = lineNames[line];
+    grid.appendChild(header);
+
+    const sorted = lineSlides.map((s,i) => ({...s, idx:i, rating:lineRatings[i]}))
+      .sort((a,b) => b.rating - a.rating);
+    const topRating = sorted[0].rating;
+
+    sorted.forEach((s, rank) => {
+      const card = document.createElement("div");
+      card.className = "result-card" + (rank===0 && s.rating>0 ? " top-pick" : "");
+      let starsHtml = "";
+      for(let i=1;i<=5;i++) starsHtml += `<span class="${i<=s.rating?"":"empty"}">★</span>`;
+      card.innerHTML = `
+        ${rank===0 && s.rating>0 ? "<div class=\"top-badge\">⭐ Favorita</div>" : ""}
+        <img src="${s.img}" alt="${s.title}">
+        <div class="result-card-title">${String(s.idx+1).padStart(2,"0")} — ${s.title}</div>
+        ${s.rating>0 ? `<div class="result-stars">${starsHtml}</div>` : "<div class=\"result-no-rating\">Sem avaliação</div>"}`;
+      grid.appendChild(card);
+    });
   });
+
   document.getElementById("resultsOverlay").classList.add("open");
-}
-
-
-function openLightbox() {
-  const img = document.querySelector('#slide-' + current + ' img');
-  if (!img) return;
-  document.getElementById('lightbox-img').src = img.src;
-  document.getElementById('lightbox-num').textContent =
-    String(current+1).padStart(2,'0') + ' / ' + total + '  ·  ' + slides[current].title;
-  document.getElementById('lightbox').classList.add('open');
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
 }
 
 function closeResults() {
   document.getElementById("resultsOverlay").classList.remove("open");
+}
+
+function openLightbox() {
+  const img = document.querySelector("#slide-" + current + " img");
+  if (!img) return;
+  document.getElementById("lightbox-img").src = img.src;
+  document.getElementById("lightbox-num").textContent =
+    String(current+1).padStart(2,"0") + " / " + total + "  ·  " + slides[current].title;
+  document.getElementById("lightbox").classList.add("open");
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
 }
 
 document.addEventListener("keydown", e => {
