@@ -651,7 +651,6 @@ function init() {
     card.className = "version-info" + (i === 0 ? " active" : "");
     card.id = "info-" + i;
     card.innerHTML = `
-      <div class="version-tag">Variação ${String(i+1).padStart(2,"0")} de ${total}</div>
       <div class="version-title">${s.title}</div>
       <div class="version-desc">${s.desc}</div>
       <div class="version-attrs">
