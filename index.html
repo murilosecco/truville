@@ -572,6 +572,180 @@ body {
   .cover-line-btn { padding: 12px 24px; }
 }
 
+
+/* ── BACK TO COVER BTN ── */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: system-ui, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0 0 14px 0;
+  transition: color 0.18s;
+  width: fit-content;
+}
+.back-btn:hover { color: var(--gold); }
+.back-btn svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* ── RESULT CARD clickable ── */
+.result-card { cursor: pointer; transition: border-color 0.18s, transform 0.15s; }
+.result-card:hover { border-color: rgba(200,150,62,0.4); transform: translateY(-2px); }
+
+/* ── DETAIL LIGHTBOX ── */
+#detail-lb {
+  display: none;
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(6,3,1,0.98);
+}
+#detail-lb.open { display: flex; }
+
+.dlb-inner {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  width: 100%;
+  height: 100%;
+}
+
+.dlb-img-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 55%, #2A1E0E 0%, #0A0603 75%);
+  overflow: hidden;
+}
+.dlb-img-area img {
+  max-height: 92vh;
+  max-width: 92%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 56px rgba(0,0,0,0.95));
+  animation: lbIn 0.22s ease;
+}
+.dlb-bg-num {
+  position: absolute; bottom: 20px; left: 28px;
+  font-size: 110px; font-weight: bold;
+  color: rgba(200,150,62,0.06);
+  line-height: 1; pointer-events: none;
+  letter-spacing: -4px; user-select: none;
+}
+
+/* prev/next arrows on image area */
+.dlb-arrow {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(200,150,62,0.2);
+  color: var(--gold);
+  width: 44px; height: 44px; border-radius: 50%;
+  font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; z-index: 2;
+}
+.dlb-arrow:hover { background: rgba(200,150,62,0.15); border-color: var(--gold); }
+.dlb-arrow:disabled { opacity: 0.15; cursor: not-allowed; }
+.dlb-arrow.left { left: 20px; }
+.dlb-arrow.right { right: 20px; }
+
+.dlb-info {
+  background: var(--panel);
+  border-left: 1px solid rgba(200,150,62,0.1);
+  display: flex; flex-direction: column;
+  padding: 32px 26px 28px;
+  overflow-y: auto;
+  position: relative;
+}
+.dlb-info::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+}
+.dlb-close {
+  position: absolute; top: 16px; right: 16px;
+  background: transparent;
+  border: 1px solid rgba(200,150,62,0.25);
+  color: var(--gold);
+  width: 36px; height: 36px; border-radius: 50%;
+  font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s;
+}
+.dlb-close:hover { background: rgba(200,150,62,0.1); border-color: var(--gold); }
+
+.dlb-line-tag {
+  font-family: system-ui, sans-serif;
+  font-size: 8px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 6px; margin-top: 8px;
+}
+.dlb-counter {
+  font-family: system-ui, sans-serif;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 12px;
+}
+.dlb-title {
+  font-size: 22px; color: var(--gold-light);
+  font-weight: normal; margin-bottom: 14px; line-height: 1.2;
+}
+.dlb-desc {
+  font-family: system-ui, sans-serif;
+  font-size: 13px; line-height: 1.7;
+  color: var(--text); opacity: 0.82; margin-bottom: 16px;
+}
+.dlb-attrs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.dlb-attr { display: flex; align-items: baseline; gap: 10px; }
+.dlb-attr-label {
+  font-family: system-ui, sans-serif; font-size: 8px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); min-width: 65px; white-space: nowrap;
+}
+.dlb-attr-value { font-family: system-ui, sans-serif; font-size: 11px; color: var(--muted); }
+
+.dlb-rating-label {
+  font-family: system-ui, sans-serif; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px;
+}
+.dlb-stars { display: flex; gap: 5px; margin-bottom: 20px; }
+.dlb-star {
+  font-size: 26px; color: var(--star-off);
+  cursor: pointer; transition: color 0.12s, transform 0.12s;
+  user-select: none;
+}
+.dlb-star:hover, .dlb-star.active { color: var(--star-on); transform: scale(1.15); }
+
+.dlb-goto-btn {
+  margin-top: auto;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(200,150,62,0.25);
+  color: var(--gold);
+  font-family: system-ui, sans-serif;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; cursor: pointer;
+  border-radius: 2px; transition: all 0.18s;
+}
+.dlb-goto-btn:hover { background: rgba(200,150,62,0.07); border-color: var(--gold); }
+
+@media (max-width: 700px) {
+  .dlb-inner { grid-template-columns: 1fr; grid-template-rows: 55vh 1fr; }
+  .dlb-img-area { height: 55vh; }
+  .dlb-img-area img { max-height: 100%; }
+  .dlb-bg-num { font-size: 60px; bottom: 8px; left: 10px; }
+  .dlb-arrow { width: 36px; height: 36px; font-size: 14px; }
+  .dlb-arrow.left { left: 10px; }
+  .dlb-arrow.right { right: 10px; }
+  .dlb-info { padding: 20px 18px 18px; border-left: none; border-top: 1px solid rgba(200,150,62,0.12); }
+  .dlb-title { font-size: 18px; }
+  .dlb-desc { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -638,6 +812,12 @@ body {
   </div>
 
   <div class="info-panel">
+    <button class="back-btn" onclick="backToCover()">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 2L4 6l4 4"/>
+      </svg>
+      Voltar à capa
+    </button>
     <div class="line-switcher">
       <button class="line-btn active" id="btn-tradicional" onclick="switchLine('tradicional')">Tradicional<br>500g</button>
       <button class="line-btn" id="btn-extraforte" onclick="switchLine('extraforte')">Extra Forte<br>500g</button>
@@ -770,6 +950,11 @@ function enterPresentation(line) {
   document.getElementById("stage").classList.add("visible");
   rebuildSlides();
   updateLineSwitcher();
+}
+
+function backToCover() {
+  document.getElementById("cover").classList.remove("hidden");
+  document.getElementById("stage").classList.remove("visible");
 }
 
 function switchLine(line) {
@@ -914,6 +1099,7 @@ function openResults() {
         <img src="${s.img}" alt="${s.title}">
         <div class="result-card-title">${String(s.idx+1).padStart(2,"0")} — ${s.title}</div>
         ${s.rating>0 ? `<div class="result-stars">${starsHtml}</div>` : "<div class=\"result-no-rating\">Sem avaliação</div>"}`;
+      card.onclick = () => openDetailLb(line, s.idx);
       grid.appendChild(card);
     });
   });
@@ -938,7 +1124,95 @@ function closeLightbox() {
   document.getElementById("lightbox").classList.remove("open");
 }
 
+
+// ── DETAIL LIGHTBOX STATE ──
+let dlbLine = "tradicional";
+let dlbIdx = 0;
+
+function openDetailLb(line, idx) {
+  dlbLine = line;
+  dlbIdx = idx;
+  renderDetailLb();
+  document.getElementById("detail-lb").classList.add("open");
+}
+
+function closeDetailLb() {
+  document.getElementById("detail-lb").classList.remove("open");
+}
+
+function dlbNavigate(dir) {
+  const lineSlides = allSlides[dlbLine];
+  const next = dlbIdx + dir;
+  if (next < 0 || next >= lineSlides.length) return;
+  dlbIdx = next;
+  renderDetailLb();
+}
+
+function renderDetailLb() {
+  const lineSlides = allSlides[dlbLine];
+  const lineRatings = allRatings[dlbLine];
+  const s = lineSlides[dlbIdx];
+  const lineNames = { tradicional: "Tradicional 500g", extraforte: "Extra Forte 500g" };
+
+  document.getElementById("dlb-img").src = s.img;
+  document.getElementById("dlb-bg-num").textContent = String(dlbIdx+1).padStart(2,"0");
+  document.getElementById("dlb-line-tag").textContent = lineNames[dlbLine];
+  document.getElementById("dlb-counter").textContent =
+    "Variação " + String(dlbIdx+1).padStart(2,"0") + " de " + lineSlides.length;
+  document.getElementById("dlb-title").textContent = s.title;
+  document.getElementById("dlb-desc").textContent = s.desc;
+
+  document.getElementById("dlb-attrs").innerHTML = `
+    <div class="dlb-attr"><span class="dlb-attr-label">Fundo</span><span class="dlb-attr-value">${s.fundo}</span></div>
+    <div class="dlb-attr"><span class="dlb-attr-label">Cena</span><span class="dlb-attr-value">${s.cena}</span></div>
+    <div class="dlb-attr"><span class="dlb-attr-label">Persona</span><span class="dlb-attr-value">${s.persona}</span></div>`;
+
+  // stars
+  const rating = lineRatings[dlbIdx];
+  document.querySelectorAll(".dlb-star").forEach(star => {
+    star.classList.toggle("active", parseInt(star.getAttribute("data-v")) <= rating);
+  });
+
+  // prev/next arrows
+  document.getElementById("dlb-prev").disabled = dlbIdx === 0;
+  document.getElementById("dlb-next").disabled = dlbIdx === lineSlides.length - 1;
+
+  // goto button
+  document.getElementById("dlb-goto-btn").onclick = () => {
+    closeDetailLb();
+    closeResults();
+    if (dlbLine !== currentLine) switchLine(dlbLine);
+    goTo(dlbIdx);
+  };
+}
+
+// wire dlb star clicks
+document.querySelectorAll(".dlb-star").forEach(star => {
+  star.addEventListener("click", () => {
+    allRatings[dlbLine][dlbIdx] = parseInt(star.getAttribute("data-v"));
+    renderDetailLb();
+    // also refresh main stars if same slide is active
+    if (dlbLine === currentLine && dlbIdx === current) updateStars();
+  });
+  star.addEventListener("mouseenter", () => {
+    const val = parseInt(star.getAttribute("data-v"));
+    document.querySelectorAll(".dlb-star").forEach(s =>
+      s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= val));
+  });
+  star.addEventListener("mouseleave", () => {
+    const rating = allRatings[dlbLine][dlbIdx];
+    document.querySelectorAll(".dlb-star").forEach(s =>
+      s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= rating));
+  });
+});
+
 document.addEventListener("keydown", e => {
+  if (document.getElementById("detail-lb").classList.contains("open")) {
+    if (e.key === "ArrowLeft") { dlbNavigate(-1); return; }
+    if (e.key === "ArrowRight") { dlbNavigate(1); return; }
+    if (e.key === "Escape") { closeDetailLb(); return; }
+    return;
+  }
   if (document.getElementById("lightbox").classList.contains("open")) {
     if (e.key === "Escape") closeLightbox();
     return;
@@ -963,5 +1237,35 @@ init();
   <img id="lightbox-img" src="" alt="">
   <div id="lightbox-num"></div>
 </div>
+
+<!-- ══ DETAIL LIGHTBOX (comparativo) ══ -->
+<div id="detail-lb">
+  <div class="dlb-inner">
+    <div class="dlb-img-area">
+      <div class="dlb-bg-num" id="dlb-bg-num">01</div>
+      <button class="dlb-arrow left" id="dlb-prev" onclick="dlbNavigate(-1)">&#8592;</button>
+      <img id="dlb-img" src="" alt="">
+      <button class="dlb-arrow right" id="dlb-next" onclick="dlbNavigate(1)">&#8594;</button>
+    </div>
+    <div class="dlb-info">
+      <button class="dlb-close" onclick="closeDetailLb()">&#x2715;</button>
+      <div class="dlb-line-tag" id="dlb-line-tag">Tradicional 500g</div>
+      <div class="dlb-counter" id="dlb-counter">Variação 01 de 16</div>
+      <div class="dlb-title" id="dlb-title"></div>
+      <div class="dlb-desc" id="dlb-desc"></div>
+      <div class="dlb-attrs" id="dlb-attrs"></div>
+      <div class="dlb-rating-label">Avaliação</div>
+      <div class="dlb-stars" id="dlb-stars">
+        <span class="dlb-star" data-v="1">★</span>
+        <span class="dlb-star" data-v="2">★</span>
+        <span class="dlb-star" data-v="3">★</span>
+        <span class="dlb-star" data-v="4">★</span>
+        <span class="dlb-star" data-v="5">★</span>
+      </div>
+      <button class="dlb-goto-btn" id="dlb-goto-btn">Ir para esta variação →</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
