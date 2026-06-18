@@ -9,8 +9,7 @@
 
 :root {
   --bg: #120C06;
-  --surface: #1A1008;
-  --panel: #1E1409;
+  --panel: #1A1008;
   --gold: #C8963E;
   --gold-light: #E8B96A;
   --cream: #F5EDD8;
@@ -23,33 +22,93 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Georgia', serif;
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-/* ── LOGO ── */
-.logo-svg { width: 100%; height: auto; display: block; }
-.logo-svg .cls-1 { fill: #f0801b; }
-.logo-svg .cls-2 { fill: #fff9ed; }
-
-/* ══════════════════════════════
-   DESKTOP LAYOUT
-══════════════════════════════ */
-.stage {
-  display: grid;
-  grid-template-columns: 1fr 360px;
+  font-family: Georgia, serif;
   height: 100vh;
   overflow: hidden;
 }
 
-/* ── IMAGE PANEL ── */
+.logo-svg { width: 100%; height: auto; display: block; }
+.logo-svg .cls-1 { fill: #f0801b; }
+.logo-svg .cls-2 { fill: #fff9ed; }
+
+/* ══════════════════════════
+   CAPA
+══════════════════════════ */
+#cover {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #2A1A08 0%, #0E0804 100%);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+#cover.hidden {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+.cover-logo { width: min(360px, 72vw); margin-bottom: 36px; }
+
+.cover-tagline {
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 56px;
+  text-align: center;
+}
+
+.cover-btn {
+  padding: 14px 48px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-family: system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+.cover-btn:hover {
+  background: rgba(200,150,62,0.1);
+  letter-spacing: 4px;
+}
+
+.cover-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ══════════════════════════
+   STAGE (apresentação)
+══════════════════════════ */
+.stage {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  height: 100vh;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+}
+.stage.visible { opacity: 1; }
+
+/* ── PAINEL IMAGEM ── */
 .image-panel {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(ellipse at 50% 60%, #2A1E0E 0%, #120C06 75%);
+  background: radial-gradient(ellipse at 50% 58%, #2A1E0E 0%, #0E0804 78%);
   overflow: hidden;
 }
 
@@ -66,66 +125,61 @@ body {
 .slide.active { opacity: 1; pointer-events: auto; }
 
 .slide img {
-  max-height: 82vh;
-  max-width: 88%;
+  max-height: 93vh;
+  max-width: 92%;
   object-fit: contain;
-  filter: drop-shadow(0 16px 48px rgba(0,0,0,0.85));
+  filter: drop-shadow(0 20px 56px rgba(0,0,0,0.9));
 }
 
 .version-bg-num {
   position: absolute;
-  bottom: 24px;
-  left: 32px;
-  font-size: 110px;
+  bottom: 20px;
+  left: 28px;
+  font-size: 120px;
   font-weight: bold;
-  color: rgba(200,150,62,0.07);
+  color: rgba(200,150,62,0.06);
   line-height: 1;
   pointer-events: none;
   letter-spacing: -4px;
   user-select: none;
 }
 
-/* ── INFO PANEL ── */
+/* ── PAINEL LATERAL ── */
 .info-panel {
   background: var(--panel);
-  border-left: 1px solid rgba(200,150,62,0.12);
+  border-left: 1px solid rgba(200,150,62,0.1);
   display: flex;
   flex-direction: column;
-  padding: 32px 28px 24px;
+  padding: 28px 24px 20px;
   overflow-y: auto;
   position: relative;
 }
 .info-panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
 }
 
-.logo-wrap {
-  margin-bottom: 24px;
-  width: 140px;
-  flex-shrink: 0;
-}
-
 .panel-sub {
   font-family: system-ui, sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 20px;
+  padding-top: 4px;
 }
 
-/* version info cards */
+/* version cards */
 .version-info-wrap { position: relative; flex: 1; min-height: 0; }
 
 .version-info {
   position: absolute;
   width: 100%;
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(10px);
   transition: opacity 0.35s ease, transform 0.35s ease;
   pointer-events: none;
 }
@@ -142,24 +196,24 @@ body {
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .version-title {
-  font-size: 22px;
+  font-size: 20px;
   color: var(--gold-light);
   font-weight: normal;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   line-height: 1.2;
 }
 .version-desc {
   font-family: system-ui, sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--text);
-  opacity: 0.82;
-  margin-bottom: 16px;
+  opacity: 0.8;
+  margin-bottom: 14px;
 }
-.version-attrs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.version-attrs { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
 .attr { display: flex; align-items: baseline; gap: 10px; }
 .attr-label {
   font-family: system-ui, sans-serif;
@@ -167,7 +221,7 @@ body {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--gold);
-  min-width: 70px;
+  min-width: 65px;
   white-space: nowrap;
 }
 .attr-value {
@@ -176,63 +230,57 @@ body {
   color: var(--muted);
 }
 
-/* ── RATING ── */
-.rating-section { margin-bottom: 18px; }
+/* rating */
+.rating-section { margin-bottom: 16px; }
 .rating-label {
   font-family: system-ui, sans-serif;
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 }
-.stars {
-  display: flex;
-  gap: 6px;
-}
+.stars { display: flex; gap: 5px; }
 .star {
-  font-size: 24px;
+  font-size: 26px;
   color: var(--star-off);
   cursor: pointer;
-  transition: color 0.15s, transform 0.15s;
-  line-height: 1;
+  transition: color 0.12s, transform 0.12s;
   user-select: none;
 }
 .star:hover, .star.active { color: var(--star-on); transform: scale(1.15); }
 
-/* ── NAV ── */
+/* nav */
 .nav-area {
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 .nav-btn {
   background: transparent;
-  border: 1px solid rgba(200,150,62,0.25);
+  border: 1px solid rgba(200,150,62,0.22);
   color: var(--gold);
-  width: 40px; height: 40px;
+  width: 38px; height: 38px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.18s;
   flex-shrink: 0;
 }
 .nav-btn:hover { background: rgba(200,150,62,0.1); border-color: var(--gold); }
-.nav-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+.nav-btn:disabled { opacity: 0.18; cursor: not-allowed; }
 
 .progress-track {
   flex: 1; height: 2px;
-  background: rgba(200,150,62,0.12);
+  background: rgba(200,150,62,0.1);
   border-radius: 1px; overflow: hidden;
 }
 .progress-fill {
-  height: 100%;
-  background: var(--gold);
-  border-radius: 1px;
-  transition: width 0.4s ease;
+  height: 100%; background: var(--gold);
+  border-radius: 1px; transition: width 0.4s ease;
 }
 .nav-counter {
   font-family: system-ui, sans-serif;
@@ -243,148 +291,118 @@ body {
 
 .dots {
   display: flex; gap: 5px; flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 12px;
+  justify-content: center; margin-top: 10px;
 }
 .dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: rgba(200,150,62,0.18);
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(200,150,62,0.15);
   cursor: pointer; border: none; padding: 0;
-  transition: all 0.2s;
+  transition: all 0.18s;
 }
 .dot.active { background: var(--gold); transform: scale(1.4); }
 
-/* ── RESULTS BTN ── */
 .results-btn {
-  display: block;
-  width: 100%;
-  margin-top: 14px;
-  padding: 10px;
+  display: block; width: 100%;
+  margin-top: 12px; padding: 9px;
   background: transparent;
-  border: 1px solid rgba(200,150,62,0.3);
+  border: 1px solid rgba(200,150,62,0.25);
   color: var(--gold);
   font-family: system-ui, sans-serif;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
   border-radius: 2px;
-  transition: all 0.2s;
+  transition: all 0.18s;
 }
-.results-btn:hover { background: rgba(200,150,62,0.08); border-color: var(--gold); }
+.results-btn:hover { background: rgba(200,150,62,0.07); border-color: var(--gold); }
 
-/* ══════════════════════════════
+/* ══════════════════════════
    RESULTS OVERLAY
-══════════════════════════════ */
+══════════════════════════ */
 .results-overlay {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(12,8,3,0.95);
-  z-index: 100;
-  overflow-y: auto;
+  position: fixed; inset: 0;
+  background: rgba(10,6,2,0.96);
+  z-index: 100; overflow-y: auto;
   padding: 40px 20px;
 }
 .results-overlay.open { display: block; }
 
 .results-header {
-  text-align: center;
-  margin-bottom: 32px;
+  text-align: center; margin-bottom: 32px;
 }
-.results-header .logo-wrap { width: 120px; margin: 0 auto 12px; }
+.results-header .rh-logo { width: 140px; margin: 0 auto 14px; }
 .results-header h2 {
-  font-size: 18px;
-  color: var(--gold-light);
-  font-weight: normal;
-  letter-spacing: 1px;
+  font-size: 18px; color: var(--gold-light);
+  font-weight: normal; letter-spacing: 1px;
 }
 .results-header p {
   font-family: system-ui, sans-serif;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 6px;
-  letter-spacing: 1.5px;
+  font-size: 10px; color: var(--muted);
+  margin-top: 5px; letter-spacing: 2px;
   text-transform: uppercase;
 }
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 14px;
+  max-width: 920px;
   margin: 0 auto 32px;
 }
-
 .result-card {
   background: var(--panel);
   border: 1px solid rgba(200,150,62,0.1);
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 12px;
   text-align: center;
   position: relative;
 }
 .result-card.top-pick {
   border-color: var(--gold);
-  box-shadow: 0 0 20px rgba(200,150,62,0.15);
+  box-shadow: 0 0 24px rgba(200,150,62,0.14);
 }
 .top-badge {
-  position: absolute;
-  top: -8px; left: 50%;
+  position: absolute; top: -8px; left: 50%;
   transform: translateX(-50%);
-  background: var(--gold);
-  color: var(--bg);
+  background: var(--gold); color: var(--bg);
   font-family: system-ui, sans-serif;
-  font-size: 8px;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 10px;
-  white-space: nowrap;
+  font-size: 8px; font-weight: bold;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 10px; white-space: nowrap;
 }
 .result-card img {
-  width: 80px; height: 100px;
-  object-fit: contain;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  width: 75px; height: 96px;
+  object-fit: contain; margin-bottom: 8px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
 }
 .result-card-title {
   font-family: system-ui, sans-serif;
-  font-size: 10px;
-  color: var(--cream);
-  margin-bottom: 6px;
-  line-height: 1.3;
+  font-size: 10px; color: var(--cream);
+  margin-bottom: 5px; line-height: 1.3;
 }
-.result-stars { color: var(--star-on); font-size: 14px; letter-spacing: 1px; }
+.result-stars { color: var(--star-on); font-size: 13px; letter-spacing: 1px; }
 .result-stars .empty { color: var(--star-off); }
 .result-no-rating {
   font-family: system-ui, sans-serif;
-  font-size: 10px;
-  color: var(--muted);
-  font-style: italic;
+  font-size: 10px; color: var(--muted); font-style: italic;
 }
-
 .close-results {
-  display: block;
-  margin: 0 auto;
-  padding: 12px 32px;
-  background: transparent;
-  border: 1px solid rgba(200,150,62,0.3);
+  display: block; margin: 0 auto;
+  padding: 12px 36px; background: transparent;
+  border: 1px solid rgba(200,150,62,0.28);
   color: var(--gold);
   font-family: system-ui, sans-serif;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
+  font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; cursor: pointer;
+  border-radius: 2px; transition: all 0.18s;
 }
-.close-results:hover { background: rgba(200,150,62,0.08); border-color: var(--gold); }
+.close-results:hover { background: rgba(200,150,62,0.07); border-color: var(--gold); }
 
-/* ══════════════════════════════
-   MOBILE LAYOUT
-══════════════════════════════ */
+/* ══════════════════════════
+   MOBILE
+══════════════════════════ */
 @media (max-width: 700px) {
   body { overflow: auto; }
 
@@ -395,54 +413,44 @@ body {
     overflow: hidden;
   }
 
-  .image-panel {
-    flex: 1;
-    min-height: 0;
-    position: relative;
-  }
+  .image-panel { flex: 1; min-height: 0; }
 
   .slide img {
     max-height: 100%;
-    max-width: 92%;
+    max-width: 94%;
   }
 
-  .version-bg-num {
-    font-size: 60px;
-    bottom: 8px;
-    left: 12px;
-  }
+  .version-bg-num { font-size: 64px; bottom: 8px; left: 10px; }
 
   .info-panel {
     flex-shrink: 0;
-    padding: 16px 20px 16px;
+    padding: 14px 18px 14px;
     border-left: none;
-    border-top: 1px solid rgba(200,150,62,0.15);
+    border-top: 1px solid rgba(200,150,62,0.13);
     overflow-y: auto;
-    max-height: 52vh;
+    max-height: 50vh;
   }
 
-  .logo-wrap { width: 100px; margin-bottom: 12px; }
-  .panel-sub { margin-bottom: 8px; font-size: 9px; }
+  .panel-sub { margin-bottom: 6px; }
 
   .version-info-wrap { min-height: unset; }
   .version-info { position: relative !important; opacity: 1 !important; transform: none !important; }
   .version-info:not(.active) { display: none; }
 
-  .version-title { font-size: 18px; margin-bottom: 8px; }
-  .version-desc { font-size: 12px; line-height: 1.6; margin-bottom: 10px; display: none; }
-  .version-attrs { margin-bottom: 12px; }
+  .version-title { font-size: 17px; margin-bottom: 6px; }
+  .version-desc { display: none; }
+  .version-attrs { margin-bottom: 10px; }
 
-  .stars .star { font-size: 28px; }
+  .stars .star { font-size: 30px; }
 
-  .nav-area { padding-top: 12px; margin-top: 8px; }
-  .dots { margin-top: 8px; }
-  .results-btn { margin-top: 10px; padding: 9px; }
+  .nav-area { padding-top: 10px; margin-top: 6px; }
+  .dots { margin-top: 6px; }
+  .results-btn { margin-top: 8px; }
 
-  .results-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 12px;
-  }
-  .results-overlay { padding: 24px 16px; }
+  .results-grid { grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 10px; }
+  .results-overlay { padding: 20px 14px; }
+
+  .cover-logo { width: min(280px, 80vw); }
 }
 
 @media (max-width: 400px) {
@@ -450,30 +458,24 @@ body {
 }
 
 .key-hint {
-  position: fixed;
-  bottom: 12px; left: 50%;
+  position: fixed; bottom: 10px; left: 50%;
   transform: translateX(-50%);
   font-family: system-ui, sans-serif;
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: 9px; letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(200,150,62,0.2);
-  pointer-events: none;
-  white-space: nowrap;
+  color: rgba(200,150,62,0.18);
+  pointer-events: none; white-space: nowrap;
 }
 @media (max-width: 700px) { .key-hint { display: none; } }
 </style>
 </head>
 <body>
 
-<div class="stage">
-  <div class="image-panel" id="imagePanel">
-    <div class="version-bg-num" id="versionBg">01</div>
-  </div>
-
-  <div class="info-panel">
-    <div class="logo-wrap">
-      <svg class="logo-svg" id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 223.8 172.81">
+<!-- ══ CAPA ══ -->
+<div id="cover">
+  <div class="cover-grain"></div>
+  <div class="cover-logo">
+    <svg class="logo-svg" id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 223.8 172.81">
   <defs>
     <style>
       .cls-1 {
@@ -512,8 +514,19 @@ body {
     </g>
   </g>
 </svg>
-    </div>
-    <div class="panel-sub">Exploração de embalagem — Tradicional 500g</div>
+  </div>
+  <div class="cover-tagline">Embalagem Tradicional 500g &nbsp;·&nbsp; Exploração de variações</div>
+  <button class="cover-btn" onclick="enterPresentation()">Ver embalagens</button>
+</div>
+
+<!-- ══ APRESENTAÇÃO ══ -->
+<div class="stage" id="stage">
+  <div class="image-panel" id="imagePanel">
+    <div class="version-bg-num" id="versionBg">01</div>
+  </div>
+
+  <div class="info-panel">
+    <div class="panel-sub">Tradicional 500g &nbsp;·&nbsp; Variação <span id="varNum">01</span> de 16</div>
 
     <div class="version-info-wrap" id="infoWrap"></div>
 
@@ -539,10 +552,10 @@ body {
   </div>
 </div>
 
-<!-- RESULTS OVERLAY -->
+<!-- ══ RESULTS ══ -->
 <div class="results-overlay" id="resultsOverlay">
   <div class="results-header">
-    <div class="logo-wrap"><svg class="logo-svg" id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 223.8 172.81">
+    <div class="rh-logo"><svg class="logo-svg" id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 223.8 172.81">
   <defs>
     <style>
       .cls-1 {
@@ -582,29 +595,29 @@ body {
   </g>
 </svg></div>
     <h2>Comparativo de Avaliações</h2>
-    <p>Tradicional 500g — Todas as variações</p>
+    <p>Tradicional 500g — todas as variações</p>
   </div>
   <div class="results-grid" id="resultsGrid"></div>
   <button class="close-results" onclick="closeResults()">Fechar e continuar</button>
 </div>
 
-<div class="key-hint">&#8592; &#8594; navegar &nbsp;·&nbsp; ESC fechar</div>
+<div class="key-hint">&#8592; &#8594; navegar &nbsp;·&nbsp; 1–5 avaliar &nbsp;·&nbsp; ESC fechar</div>
 
 <script>
 const slides = [
-  { img: "01_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Gradiente Intenso", desc: "O degradê de branco para marrom-escuro cria profundidade e calor. A xícara detalhada — com biscoito e colher dourada — conta uma história de ritual e aconchego.", fundo: "Branco → Marrom profundo", cena: "Xícara com biscoito e colher ouro", persona: "Caloroso, indulgente, premium" },
+  { img: "01_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Gradiente Intenso", desc: "O degradê de branco para marrom-escuro cria profundidade e calor. A xícara com biscoito e colher dourada conta uma história de ritual e aconchego.", fundo: "Branco → Marrom profundo", cena: "Xícara com biscoito e colher ouro", persona: "Caloroso, indulgente, premium" },
   { img: "02_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Laranja Vibrante", desc: "Fundo laranja-âmbar intenso com cromatismo assertivo. Excelente para gôndola — corta o ruído visual da concorrência.", fundo: "Branco → Laranja âmbar intenso", cena: "Xícara com biscoito e colher ouro", persona: "Energético, apetitoso, popular" },
-  { img: "03_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Monocromia Sofisticada", desc: "Fundo quase branco reduz o ruído e eleva a percepção de valor. Fala para um público que associa menos cor a mais qualidade.", fundo: "Branco total com toque dourado", cena: "Xícara premium, acabamento ouro", persona: "Refinado, discreto, confiável" },
+  { img: "03_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Monocromia Sofisticada", desc: "Fundo quase branco reduz o ruído e eleva a percepção de valor. Para um público que associa menos cor a mais qualidade.", fundo: "Branco total com toque dourado", cena: "Xícara premium, acabamento ouro", persona: "Refinado, discreto, confiável" },
   { img: "04_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Bege Quente", desc: "Transição suave de branco para bege-pêssego. Equilíbrio entre frieza e intensidade — versão universalmente legível.", fundo: "Branco → Bege pêssego", cena: "Xícara com biscoito e colher", persona: "Acessível, familiar, equilibrado" },
   { img: "05_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Cena Simplificada", desc: "A composição ganha leveza com a remoção do biscoito e da colher. Mais limpa e legível em prateleiras com pouco espaço.", fundo: "Branco → Laranja suave", cena: "Xícara clean com grãos de café", persona: "Claro, funcional, honesto" },
   { img: "06_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Vibração + Leveza", desc: "Laranja intenso com composição mínima. Combina agressividade visual com clareza de mensagem. Para mercados populares.", fundo: "Branco → Laranja forte", cena: "Xícara sem adereços", persona: "Impactante, direto, popular" },
-  { img: "07_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Composição Aberta", desc: "A xícara ganha protagonismo e 'Tradicional' em ouro comunica herança. A identidade truVille aparece fortalecida.", fundo: "Branco → Laranja médio", cena: "Xícara ampla, posição central", persona: "Autêntico, experiencial, caloroso" },
-  { img: "08_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Xícara em Evidência", desc: "A imagem domina o layout. 'Torra Média' ao lado esquerdo reequilibra a composição. A fumacinha é o ponto focal.", fundo: "Branco → Laranja suave baixo", cena: "Xícara dominante, vapor destacado", persona: "Apetitoso, intenso, sensorial" },
+  { img: "07_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Composição Aberta", desc: "A xícara ganha protagonismo e Tradicional em ouro comunica herança. A identidade truVille aparece fortalecida.", fundo: "Branco → Laranja médio", cena: "Xícara ampla, posição central", persona: "Autêntico, experiencial, caloroso" },
+  { img: "08_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Xícara em Evidência", desc: "A imagem domina o layout. Torra Média ao lado esquerdo reequilibra a composição. A fumacinha é o ponto focal.", fundo: "Branco → Laranja suave baixo", cena: "Xícara dominante, vapor destacado", persona: "Apetitoso, intenso, sensorial" },
   { img: "09_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Louça Clássica", desc: "A louça com relevo traz um toque artesanal. Dialoga com consumidores que valorizam a cultura do café.", fundo: "Branco → Laranja médio", cena: "Louça com relevo, grão de café", persona: "Artesanal, tradicional, cultural" },
-  { img: "10_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Equilíbrio Central", desc: "Hierarquia visual clara: marca → variante → produto. Excelente para e-commerce onde a leitura rápida é essencial.", fundo: "Branco → Laranja moderado", cena: "Xícara centrada, espaço respirante", persona: "Legível, equilibrado, digital" },
+  { img: "10_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Equilíbrio Central", desc: "Hierarquia visual clara: marca, variante, produto. Excelente para e-commerce onde a leitura rápida é essencial.", fundo: "Branco → Laranja moderado", cena: "Xícara centrada, espaço respirante", persona: "Legível, equilibrado, digital" },
   { img: "11_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Clássica Madura", desc: "Paleta bege suavizada e composição ampla transmitem maturidade de marca. Para lojas gourmet e empórios.", fundo: "Branco com borda laranja", cena: "Louça elegante, espaço generoso", persona: "Maduro, gourmet, sofisticado" },
-  { img: "12_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Versão Compacta", desc: "Proporção menor da xícara cria equilíbrio modular. Funciona muito bem em conjunto de linha — ao lado de outros sabores.", fundo: "Branco → Laranja pêssego", cena: "Proporção equilibrada", persona: "Modular, escalável, consistente" },
-  { img: "13_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Tradicional em Destaque", desc: "O script dourado 'Tradicional' recebe mais peso visual. A variante passa de elemento secundário a âncora da identidade.", fundo: "Branco → Bege laranja", cena: "Xícara com grãos de café", persona: "Patrimonial, gastronômico" },
+  { img: "12_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Versão Compacta", desc: "Proporção menor da xícara cria equilíbrio modular. Funciona bem em conjunto de linha ao lado de outros sabores.", fundo: "Branco → Laranja pêssego", cena: "Proporção equilibrada", persona: "Modular, escalável, consistente" },
+  { img: "13_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Tradicional em Destaque", desc: "O script dourado Tradicional recebe mais peso visual. A variante passa de elemento secundário a âncora da identidade.", fundo: "Branco → Bege laranja", cena: "Xícara com grãos de café", persona: "Patrimonial, gastronômico" },
   { img: "14_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Elegância Contida", desc: "O script com contorno duplo eleva a percepção de valor. Paleta bege quente e louça criam coerência visual total.", fundo: "Branco → Bege âmbar", cena: "Louça com acabamento dourado", persona: "Coeso, elegante, premium acessível" },
   { img: "15_Mockup_500g_Cafe__Tradicional_Truville.jpg", title: "Proporção Final", desc: "A louça domina, a fumacinha é etérea. Maior poesia visual da série — transmite a experiência antes de qualquer texto.", fundo: "Branco → Laranja suave", cena: "Xícara larga, vapor poético", persona: "Sensorial, onírico, memorável" },
   { img: "Mockup_500g_Cafe__Tradicional_Truville.png", title: "Versão de Referência", desc: "A versão mestre — todos os elementos em máxima expressão. O ponto de partida para toda a exploração da série.", fundo: "Branco → Marrom caramelo intenso", cena: "Composição completa canônica", persona: "Completo, referência, canônico" },
@@ -614,26 +627,31 @@ const total = slides.length;
 let current = 0;
 const ratings = new Array(total).fill(0);
 
+function enterPresentation() {
+  document.getElementById("cover").classList.add("hidden");
+  document.getElementById("stage").classList.add("visible");
+}
+
 function init() {
-  const panel = document.getElementById('imagePanel');
-  const infoWrap = document.getElementById('infoWrap');
-  const dotsEl = document.getElementById('dots');
+  const panel = document.getElementById("imagePanel");
+  const infoWrap = document.getElementById("infoWrap");
+  const dotsEl = document.getElementById("dots");
 
   slides.forEach((s, i) => {
-    const div = document.createElement('div');
-    div.className = 'slide' + (i === 0 ? ' active' : '');
-    div.id = 'slide-' + i;
-    const img = document.createElement('img');
+    const div = document.createElement("div");
+    div.className = "slide" + (i === 0 ? " active" : "");
+    div.id = "slide-" + i;
+    const img = document.createElement("img");
     img.src = s.img;
     img.alt = s.title;
     div.appendChild(img);
-    panel.insertBefore(div, document.getElementById('versionBg'));
+    panel.insertBefore(div, document.getElementById("versionBg"));
 
-    const card = document.createElement('div');
-    card.className = 'version-info' + (i === 0 ? ' active' : '');
-    card.id = 'info-' + i;
+    const card = document.createElement("div");
+    card.className = "version-info" + (i === 0 ? " active" : "");
+    card.id = "info-" + i;
     card.innerHTML = `
-      <div class="version-tag">Variação ${String(i+1).padStart(2,'0')} de ${total}</div>
+      <div class="version-tag">Variação ${String(i+1).padStart(2,"0")} de ${total}</div>
       <div class="version-title">${s.title}</div>
       <div class="version-desc">${s.desc}</div>
       <div class="version-attrs">
@@ -643,26 +661,24 @@ function init() {
       </div>`;
     infoWrap.appendChild(card);
 
-    const dot = document.createElement('button');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', 'Variação ' + (i+1));
+    const dot = document.createElement("button");
+    dot.className = "dot" + (i === 0 ? " active" : "");
+    dot.setAttribute("aria-label", "Variação " + (i+1));
     dot.onclick = () => goTo(i);
     dotsEl.appendChild(dot);
   });
 
-  document.querySelectorAll('.star').forEach(star => {
-    star.addEventListener('click', () => {
-      const val = parseInt(star.getAttribute('data-v'));
-      ratings[current] = val;
+  document.querySelectorAll(".star").forEach(star => {
+    star.addEventListener("click", () => {
+      ratings[current] = parseInt(star.getAttribute("data-v"));
       updateStars();
     });
-    star.addEventListener('mouseenter', () => {
-      const val = parseInt(star.getAttribute('data-v'));
-      document.querySelectorAll('.star').forEach(s => {
-        s.classList.toggle('active', parseInt(s.getAttribute('data-v')) <= val);
-      });
+    star.addEventListener("mouseenter", () => {
+      const val = parseInt(star.getAttribute("data-v"));
+      document.querySelectorAll(".star").forEach(s =>
+        s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= val));
     });
-    star.addEventListener('mouseleave', updateStars);
+    star.addEventListener("mouseleave", updateStars);
   });
 
   updateUI();
@@ -670,9 +686,8 @@ function init() {
 
 function updateStars() {
   const val = ratings[current];
-  document.querySelectorAll('.star').forEach(s => {
-    s.classList.toggle('active', parseInt(s.getAttribute('data-v')) <= val);
-  });
+  document.querySelectorAll(".star").forEach(s =>
+    s.classList.toggle("active", parseInt(s.getAttribute("data-v")) <= val));
 }
 
 function navigate(dir) {
@@ -682,69 +697,59 @@ function navigate(dir) {
 }
 
 function goTo(idx) {
-  document.getElementById('slide-' + current).classList.remove('active');
-  document.getElementById('info-' + current).classList.remove('active');
-  document.querySelectorAll('.dot')[current].classList.remove('active');
+  document.getElementById("slide-" + current).classList.remove("active");
+  document.getElementById("info-" + current).classList.remove("active");
+  document.querySelectorAll(".dot")[current].classList.remove("active");
   current = idx;
-  document.getElementById('slide-' + current).classList.add('active');
-  document.getElementById('info-' + current).classList.add('active');
-  document.querySelectorAll('.dot')[current].classList.add('active');
+  document.getElementById("slide-" + current).classList.add("active");
+  document.getElementById("info-" + current).classList.add("active");
+  document.querySelectorAll(".dot")[current].classList.add("active");
   updateUI();
   updateStars();
 }
 
 function updateUI() {
-  document.getElementById('versionBg').textContent = String(current+1).padStart(2,'0');
-  document.getElementById('counter').textContent = (current+1) + ' / ' + total;
-  document.getElementById('progressFill').style.width = ((current+1)/total*100) + '%';
-  document.getElementById('prevBtn').disabled = current === 0;
-  document.getElementById('nextBtn').disabled = current === total-1;
+  document.getElementById("versionBg").textContent = String(current+1).padStart(2,"0");
+  document.getElementById("varNum").textContent = String(current+1).padStart(2,"0");
+  document.getElementById("counter").textContent = (current+1) + " / " + total;
+  document.getElementById("progressFill").style.width = ((current+1)/total*100) + "%";
+  document.getElementById("prevBtn").disabled = current === 0;
+  document.getElementById("nextBtn").disabled = current === total-1;
 }
 
 function openResults() {
-  const grid = document.getElementById('resultsGrid');
-  grid.innerHTML = '';
-
+  const grid = document.getElementById("resultsGrid");
+  grid.innerHTML = "";
   const sorted = slides.map((s,i) => ({...s, idx: i, rating: ratings[i]}))
     .sort((a,b) => b.rating - a.rating);
-
-  const maxRating = sorted[0].rating;
-
   sorted.forEach((s, rank) => {
-    const card = document.createElement('div');
-    card.className = 'result-card' + (rank === 0 && s.rating > 0 ? ' top-pick' : '');
-
-    let starsHtml = '';
-    for(let i=1; i<=5; i++) {
-      starsHtml += `<span class="${i <= s.rating ? '' : 'empty'}">★</span>`;
-    }
-
+    const card = document.createElement("div");
+    card.className = "result-card" + (rank === 0 && s.rating > 0 ? " top-pick" : "");
+    let starsHtml = "";
+    for(let i=1; i<=5; i++)
+      starsHtml += `<span class="${i <= s.rating ? "" : "empty"}">★</span>`;
     card.innerHTML = `
-      ${rank === 0 && s.rating > 0 ? '<div class="top-badge">⭐ Favorita</div>' : ''}
+      ${rank === 0 && s.rating > 0 ? "<div class=\"top-badge\">⭐ Favorita</div>" : ""}
       <img src="${s.img}" alt="${s.title}">
-      <div class="result-card-title">${String(s.idx+1).padStart(2,'0')} — ${s.title}</div>
-      ${s.rating > 0
-        ? `<div class="result-stars">${starsHtml}</div>`
-        : '<div class="result-no-rating">Sem avaliação</div>'}
-    `;
+      <div class="result-card-title">${String(s.idx+1).padStart(2,"0")} — ${s.title}</div>
+      ${s.rating > 0 ? `<div class="result-stars">${starsHtml}</div>` : "<div class=\"result-no-rating\">Sem avaliação</div>"}`;
     grid.appendChild(card);
   });
-
-  document.getElementById('resultsOverlay').classList.add('open');
+  document.getElementById("resultsOverlay").classList.add("open");
 }
 
 function closeResults() {
-  document.getElementById('resultsOverlay').classList.remove('open');
+  document.getElementById("resultsOverlay").classList.remove("open");
 }
 
-document.addEventListener('keydown', e => {
-  if (document.getElementById('resultsOverlay').classList.contains('open')) {
-    if (e.key === 'Escape') closeResults();
+document.addEventListener("keydown", e => {
+  if (document.getElementById("resultsOverlay").classList.contains("open")) {
+    if (e.key === "Escape") closeResults();
     return;
   }
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigate(-1);
-  if (e.key === 'Escape') goTo(0);
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") navigate(1);
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") navigate(-1);
+  if (e.key === "Escape") goTo(0);
   const num = parseInt(e.key);
   if (num >= 1 && num <= 5) { ratings[current] = num; updateStars(); }
 });
